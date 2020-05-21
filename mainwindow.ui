@@ -85,6 +85,23 @@
          <item>
           <widget class="QLineEdit" name="le_message"/>
          </item>
+         <item>
+          <widget class="QPushButton" name="pb_media">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>w512h4641380476740clip.png</normaloff>w512h4641380476740clip.png</iconset>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
        <item>
@@ -93,6 +110,21 @@
           <string>Send</string>
          </property>
         </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QGroupBox" name="gb_media">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="title">
+       <string>Media</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QGraphicsView" name="graphicsView"/>
        </item>
       </layout>
      </widget>
@@ -108,21 +140,6 @@
      <height>23</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuLog">
-    <property name="title">
-     <string>Log</string>
-    </property>
-    <addaction name="actionSave_log"/>
-    <addaction name="actionClear"/>
-   </widget>
-   <widget class="QMenu" name="menuFile">
-    <property name="title">
-     <string>File</string>
-    </property>
-    <addaction name="actionExit"/>
-   </widget>
-   <addaction name="menuFile"/>
-   <addaction name="menuLog"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionClear">

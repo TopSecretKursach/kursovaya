@@ -1,6 +1,3 @@
-//
-// Created by w1ckedente on 05.05.2020.
-//
 #include "chatlib.h"
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -104,6 +101,11 @@ MessagePacket *create_message_packet(const char *msg, const char *name, MessageT
             if (msg) strcpy(packet->content.content_message.content, msg);
             break;
 
+        case(MEDIA_CONTENT):
+            strcpy(packet->content.media.name, name);
+            memcpy(packet->content.media.media_content, msg, MAX_MEDIA_CONTENT_LEN);
+            break;
+
         default:
             break;
     }
@@ -117,7 +119,6 @@ int parse_bytes(byte *string, size_t len, MessagePacket *mp) {
     byte *counter = string;
 
     if (len != sizeof(MessagePacket)) {
-//        printf("string 120\n");
         return INVALID_PACKET;
     }
 
@@ -126,7 +127,6 @@ int parse_bytes(byte *string, size_t len, MessagePacket *mp) {
     counter += SIG_SIZE;
 
     if (strcmp(signature, SIGNATURE) != 0) {
-//        printf("string 129\n");
         return INVALID_PACKET;
     }
 
@@ -143,7 +143,6 @@ int parse_bytes(byte *string, size_t len, MessagePacket *mp) {
     memcpy(&crc, counter, sizeof(unsigned short));
 
     if (crc != crc16(string)) {
-//        printf("string 146\n");
         return CORRUPTED_PACKET;
     }
 
@@ -166,7 +165,6 @@ MessagePacket *receive_message(Messenger *_this) {
         return NULL;
 
     if ((code = parse_bytes(received_bytes, len, mp)) < 0) {
-//        printf("string 164\n");
         return NULL;
     }
 
@@ -189,6 +187,9 @@ Messenger *init_messenger(unsigned port, const char name[]) {
     Messenger *m = (Messenger *) malloc(sizeof(Messenger));
     if (!m) return NULL;
 
+    if (strlen(name) == 0) {
+        return NULL;
+    }
     strcpy(m->name, name);
 
     m->recv_addr = (struct sockaddr_in *) malloc(sizeof(struct sockaddr_in));
@@ -213,4 +214,26 @@ void delete_messenger(Messenger  *_this) {
     free(_this->send_addr);
     free(_this->recv_addr);
     free(_this);
+}
+
+int validate_content(const char content[])
+{
+    for (size_t i = 0; i < strlen(content); i++) {
+        if (!((content[i] >= 'A' && content[i] <= 'Z') || (content[i] >= 'a' && content[i] <= 'z')
+                || (content[i] >= '0' && content[i] <= '9') || (content[i] == ',')
+                || (content[i] == '.') || (content[i] == ';') || (content[i] == '?')
+                || (content[i] == '!') || (content[i] == ' ')))
+            return -1;
+    }
+    return 0;
+}
+
+int validate_name(const char name[])
+{
+    for (size_t i = 0; i < strlen(name); i++) {
+            if (!((name[i] >= 'A' && name[i] <= 'Z') || (name[i] >= 'a' && name[i] <= 'z')
+                    || (name[i] >= '0' && name[i] <= '9')))
+                return -1;
+        }
+        return 0;
 }

@@ -1,6 +1,3 @@
-//
-// Created by w1ckedente on 05.05.2020.
-//
 
 #ifndef NEW_MESSENGER_CHATLIB_H
 #define NEW_MESSENGER_CHATLIB_H
@@ -10,17 +7,18 @@
 #define DEFAULT_PORT 5000
 #define MAX_NAME_LEN 32
 #define MAX_CONTENT_LEN 256
+#define MAX_MEDIA_CONTENT_LEN 4096
 
 typedef unsigned char byte;
 
 struct sMessenger;
 struct sMessagePacket;
 
-//enum eMessageTypes;
 typedef enum eMessageTypes {
     HELLO = 1,
     BYE,
-    CONTENT
+    CONTENT,
+    MEDIA_CONTENT
 } MessageTypes;
 
 typedef int (*f_send_message)(struct sMessenger *, const char *, enum eMessageTypes);
@@ -34,7 +32,6 @@ typedef enum eParseErrors {
 
 typedef struct sHeader {
     char signature[SIG_SIZE];
-//    char name[MAX_NAME_LEN];
     MessageTypes message_type;
 } Header;
 
@@ -52,10 +49,16 @@ typedef struct sContentMessage {
     char content[MAX_CONTENT_LEN];
 } ContentMessage;
 
+typedef struct sMediaContentMessage {
+    char name[MAX_NAME_LEN];
+    char media_content[MAX_MEDIA_CONTENT_LEN];
+} MediaContentMessage;
+
 typedef union uContent {
     HelloMessage hello_message;
     ByeMessage bye_message;
     ContentMessage content_message;
+    MediaContentMessage media;
 } Content;
 
 typedef struct sMessagePacket {
@@ -67,8 +70,8 @@ typedef struct sMessagePacket {
 
 
 typedef struct sMessenger {
-    char name[MAX_NAME_LEN]; // all fields of this struct is constant,
-    int send_socket;         // because instance of Messenger can be use in several threads without mutexes
+    char name[MAX_NAME_LEN];
+    int send_socket;
     int receive_socket;
     struct sockaddr_in *send_addr;
     struct sockaddr_in *recv_addr;
@@ -83,12 +86,7 @@ void delete_messenger(Messenger *_this);
 
 MessagePacket *receive_message(Messenger *);
 
-//int validate_name(const char name[]) {
-//    return 0;
-//}
-//
-//int validate_content(const char content[]) {
-//    return 0;
-//}
+int validate_name(const char name[]);
+int validate_content(const char content[]);
 
 #endif //NEW_MESSENGER_CHATLIB_H

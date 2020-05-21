@@ -19,12 +19,16 @@ SOURCES += \
     chatlib.cpp \
     chatwrapper.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    messenger.cpp \
+    validators.cpp
 
 HEADERS += \
     chatwrapper.h \
     mainwindow.h \
-    chatlib.h
+    chatlib.h \
+    messenger.h \
+    validators.h
 
 FORMS += \
     mainwindow.ui

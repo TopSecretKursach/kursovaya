@@ -1,7 +1,9 @@
 #include "chatwrapper.h"
 #include "chatlib.h"
 #include <exception>
-
+#include <QPixmap>
+#include <QBuffer>
+#include <QFile>
 //ChatWrapper::ChatWrapper(QObject *parent) :
 //    QObject(parent)
 //  , _messenger(nullptr)
@@ -17,7 +19,8 @@ ChatWrapper::ChatWrapper(const QString &name, QObject *parent) :
   , _recv_thread([=] {
     if (_messenger)
         p_wait_new_message(*this);
-    else throw std::runtime_error("Initialisation failed");
+    else
+        throw std::runtime_error("Initialisation failed");
 })
 {
 }
@@ -34,24 +37,19 @@ bool ChatWrapper::flag() const
     return _flag;
 }
 
-void ChatWrapper::set_flag(bool flag)
-{
-    _flag = flag;
-}
-
 Messenger *ChatWrapper::messenger() const
 {
     return _messenger;
 }
 
-//void ChatWrapper::set_messenger(Messenger *m)
-//{
-//    _messenger = m;
-//}
-
 bool ChatWrapper::is_valid() const
 {
     return !!_messenger;
+}
+
+bool ChatWrapper::validate_image_size(const QPixmap &pic)
+{
+    return !(pic.size().width() * pic.size().height()  > MAX_MEDIA_CONTENT_LEN);
 }
 
 void ChatWrapper::send_message(const QString &message)
@@ -78,6 +76,20 @@ void ChatWrapper::send_bye()
         throw std::runtime_error("Sending failed");
 }
 
+void ChatWrapper::send_picture(const QPixmap &pic)
+{
+    if (!validate_image_size(pic))
+        throw std::runtime_error("Oversize image");
+    QByteArray bArray;
+    QBuffer buffer(&bArray);
+    buffer.open(QIODevice::WriteOnly);
+    pic.save(&buffer, "PNG");
+    int c = _messenger->sender(_messenger, buffer.data().data(), MEDIA_CONTENT);
+
+    if (c <= 0)
+        throw std::runtime_error("Sending error");
+}
+
 
 
 void ChatWrapper::p_wait_new_message(ChatWrapper &w)
@@ -102,6 +114,12 @@ void ChatWrapper::p_wait_new_message(ChatWrapper &w)
             case(CONTENT):
                 emit w.new_message(QString(mp->content.content_message.name),
                                    QString(mp->content.content_message.content), false);
+                break;
+
+            case(MEDIA_CONTENT):
+                QByteArray barray(mp->content.media.media_content, MAX_MEDIA_CONTENT_LEN);
+                emit w.new_media_message(QString(mp->content.media.name),
+                                       barray);
                 break;
             }
         }

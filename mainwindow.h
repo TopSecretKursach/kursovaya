@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "chatwrapper.h"
+#include "messenger.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -16,17 +16,25 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-public slots:
-    void new_message(QString name, QString message, bool is_system);
+//public slots:
+//    void new_message(QString name, QString message, bool is_system);
+//    void new_media_message(QString name, QByteArray barray);
 
 private slots:
     void on_pb_start_clicked();
 
     void on_pb_send_clicked();
 
+    void on_pb_media_clicked();
+
+public slots:
+    void new_text_message(QString name, QString message, bool is_system);
+    void new_media_message(QString name, QPixmap picture);
+
 private:
     Ui::MainWindow *ui;
-    ChatWrapper *_chat;
+//    ChatWrapper *_chat;
+    CMessenger *_messenger;;
 
 };
 #endif // MAINWINDOW_H
