@@ -10,10 +10,9 @@ CMessenger::CMessenger(QObject *parent) :
 
 CMessenger::CMessenger(const QString &name, QObject *parent) :
     QObject(parent)
-//  , _wrapper(new ChatWrapper(name, this))
+  , _wrapper(nullptr)
   , _current_media()
 {
-   if (_wrapper) delete _wrapper;
    _wrapper = new ChatWrapper(name, this);
 
    connect(_wrapper, &ChatWrapper::new_message, this, &CMessenger::slot_new_text_message);
@@ -28,7 +27,7 @@ CMessenger::~CMessenger()
 
 void CMessenger::set_name(const QString &name)
 {
-    if (_wrapper) delete _wrapper;
+   if (_wrapper) delete _wrapper;
    _wrapper = new ChatWrapper(name, this);
    connect(_wrapper, &ChatWrapper::new_message, this, &CMessenger::new_text_message);
    connect(_wrapper, &ChatWrapper::new_message, this, &CMessenger::new_media_message);

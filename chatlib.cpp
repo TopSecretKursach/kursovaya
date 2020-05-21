@@ -88,12 +88,10 @@ MessagePacket *create_message_packet(const char *msg, const char *name, MessageT
     switch (type) {
         case (HELLO):
             strcpy(packet->content.hello_message.name, name);
-//            packet->content.hello_message.ptr = 0x0;
             break;
 
         case (BYE):
             strcpy(packet->content.bye_message.name, name);
-//            packet->content.bye_message.ptr = 0x0;
             break;
 
         case (CONTENT):
@@ -187,9 +185,12 @@ Messenger *init_messenger(unsigned port, const char name[]) {
     Messenger *m = (Messenger *) malloc(sizeof(Messenger));
     if (!m) return NULL;
 
-    if (strlen(name) == 0) {
+    if (strlen(name) == 0)
         return NULL;
-    }
+
+    if (validate_name(name) < 0)
+        return NULL;
+
     strcpy(m->name, name);
 
     m->recv_addr = (struct sockaddr_in *) malloc(sizeof(struct sockaddr_in));
@@ -211,13 +212,18 @@ Messenger *init_messenger(unsigned port, const char name[]) {
 }
 
 void delete_messenger(Messenger  *_this) {
-    free(_this->send_addr);
-    free(_this->recv_addr);
-    free(_this);
+    if (_this) {
+        free(_this->send_addr);
+        free(_this->recv_addr);
+        free(_this);
+    }
 }
 
 int validate_content(const char content[])
 {
+    if (strlen(content) > MAX_CONTENT_LEN)
+        return -1;
+
     for (size_t i = 0; i < strlen(content); i++) {
         if (!((content[i] >= 'A' && content[i] <= 'Z') || (content[i] >= 'a' && content[i] <= 'z')
                 || (content[i] >= '0' && content[i] <= '9') || (content[i] == ',')
@@ -230,6 +236,9 @@ int validate_content(const char content[])
 
 int validate_name(const char name[])
 {
+    if (strlen(name) > MAX_NAME_LEN)
+        return -1;
+
     for (size_t i = 0; i < strlen(name); i++) {
             if (!((name[i] >= 'A' && name[i] <= 'Z') || (name[i] >= 'a' && name[i] <= 'z')
                     || (name[i] >= '0' && name[i] <= '9')))

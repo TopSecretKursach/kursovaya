@@ -80,13 +80,20 @@ typedef struct sMessenger {
     f_send_message sender;
 } Messenger;
 
+// возвращает готовый к работе указатель на структуру sMesenger (aka Messenger),
+// в случае ошибки инициализации какого-либо из полей возвращает NULL,
+// при передаче пустого имени возвращает NULL
+// при передаче невалидного имени возвращает NULL
+// при передаче занятого порта возвращает NULL
 Messenger *init_messenger(unsigned port, const char name[]);
 
+// освобождает память, выделенную inti_messenger(...)
 void delete_messenger(Messenger *_this);
 
-MessagePacket *receive_message(Messenger *);
-
+// приверяет имя на валидность, в случае невалидности имени
+// вернет -1, иначе 0
 int validate_name(const char name[]);
+// аналогично validate_name, только для сообщений
 int validate_content(const char content[]);
 
 #endif //NEW_MESSENGER_CHATLIB_H

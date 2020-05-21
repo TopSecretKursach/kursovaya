@@ -16,10 +16,6 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-//public slots:
-//    void new_message(QString name, QString message, bool is_system);
-//    void new_media_message(QString name, QByteArray barray);
-
 private slots:
     void on_pb_start_clicked();
 
@@ -33,7 +29,6 @@ public slots:
 
 private:
     Ui::MainWindow *ui;
-//    ChatWrapper *_chat;
     CMessenger *_messenger;;
 
 };

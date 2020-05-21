@@ -4,13 +4,7 @@
 #include <QPixmap>
 #include <QBuffer>
 #include <QFile>
-//ChatWrapper::ChatWrapper(QObject *parent) :
-//    QObject(parent)
-//  , _messenger(nullptr)
-//  , _flag(false)
-//  , _recv_thread()
-//{
-//}
+
 
 ChatWrapper::ChatWrapper(const QString &name, QObject *parent) :
     QObject(parent)
@@ -32,50 +26,6 @@ ChatWrapper::~ChatWrapper()
     delete_messenger(_messenger);
 }
 
-bool ChatWrapper::flag() const
-{
-    return _flag;
-}
-
-Messenger *ChatWrapper::messenger() const
-{
-    return _messenger;
-}
-
-bool ChatWrapper::is_valid() const
-{
-    return !!_messenger;
-}
-
-bool ChatWrapper::validate_image_size(const QPixmap &pic)
-{
-    return !(pic.size().width() * pic.size().height()  > MAX_MEDIA_CONTENT_LEN);
-}
-
-void ChatWrapper::send_message(const QString &message)
-{
-    int c = _messenger->sender(_messenger, message.toStdString().c_str(),
-                       CONTENT);
-    if (c <= 0)
-        throw std::runtime_error("Sending failed");
-}
-
-void ChatWrapper::send_hello()
-{
-   int c = _messenger->sender(_messenger, nullptr, HELLO);
-
-   if (c <= 0)
-       throw std::runtime_error("Sending failed");
-}
-
-void ChatWrapper::send_bye()
-{
-    int c = _messenger->sender(_messenger, nullptr, BYE);
-
-    if (c <= 0)
-        throw std::runtime_error("Sending failed");
-}
-
 void ChatWrapper::send_picture(const QPixmap &pic)
 {
     if (!validate_image_size(pic))
@@ -89,8 +39,6 @@ void ChatWrapper::send_picture(const QPixmap &pic)
     if (c <= 0)
         throw std::runtime_error("Sending error");
 }
-
-
 
 void ChatWrapper::p_wait_new_message(ChatWrapper &w)
 {
@@ -125,3 +73,48 @@ void ChatWrapper::p_wait_new_message(ChatWrapper &w)
         }
     }
 }
+
+bool ChatWrapper::flag() const
+{
+    return _flag;
+}
+
+void ChatWrapper::send_hello()
+{
+   int c = _messenger->sender(_messenger, nullptr, HELLO);
+
+   if (c <= 0)
+       throw std::runtime_error("Sending failed");
+}
+
+void ChatWrapper::send_bye()
+{
+    int c = _messenger->sender(_messenger, nullptr, BYE);
+
+    if (c <= 0)
+        throw std::runtime_error("Sending failed");
+}
+
+Messenger *ChatWrapper::messenger() const
+{
+    return _messenger;
+}
+
+bool ChatWrapper::is_valid() const
+{
+    return !!_messenger;
+}
+
+bool ChatWrapper::validate_image_size(const QPixmap &pic)
+{
+    return !(pic.size().width() * pic.size().height()  > MAX_MEDIA_CONTENT_LEN);
+}
+
+void ChatWrapper::send_message(const QString &message)
+{
+    int c = _messenger->sender(_messenger, message.toStdString().c_str(),
+                       CONTENT);
+    if (c <= 0)
+        throw std::runtime_error("Sending failed");
+}
+
