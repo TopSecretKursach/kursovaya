@@ -30,30 +30,36 @@ typedef enum eParseErrors {
     INVALID_PACKET = -3
 } ParseErrors;
 
+// структура общего для всех типов сообщений заголовка
 typedef struct sHeader {
     char signature[SIG_SIZE];
     MessageTypes message_type;
 } Header;
 
 
+// содержание системного hello-сообщения
 typedef struct sHelloMessage {
     char name[MAX_NAME_LEN];
 } HelloMessage;
 
+// содержание системного bye-сообщения
 typedef struct sByeMessage {
     char name[MAX_NAME_LEN];
 } ByeMessage;
 
+// содержание текстового сообщения
 typedef struct sContentMessage {
     char name[MAX_NAME_LEN];
     char content[MAX_CONTENT_LEN];
 } ContentMessage;
 
+// содержание медиа сообщения
 typedef struct sMediaContentMessage {
     char name[MAX_NAME_LEN];
     char media_content[MAX_MEDIA_CONTENT_LEN];
 } MediaContentMessage;
 
+// набор содержаний сообщений различных типов
 typedef union uContent {
     HelloMessage hello_message;
     ByeMessage bye_message;
@@ -61,6 +67,7 @@ typedef union uContent {
     MediaContentMessage media;
 } Content;
 
+// структура пакета сообщения
 typedef struct sMessagePacket {
     Header head;
     Content content;
@@ -68,7 +75,7 @@ typedef struct sMessagePacket {
     unsigned short end;
 } MessagePacket;
 
-
+// структура, упрощающая работу функций приема и отправки с необходимыми данными
 typedef struct sMessenger {
     char name[MAX_NAME_LEN];
     int send_socket;
