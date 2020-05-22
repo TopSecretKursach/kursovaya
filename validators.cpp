@@ -1,5 +1,5 @@
 #include "validators.h"
-#include "chatlib.h"
+#include "cchatlib.h"
 
 NameValidator::NameValidator() :
     QValidator(nullptr)

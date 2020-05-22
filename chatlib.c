@@ -181,6 +181,34 @@ int send_message(Messenger *_this, const char message[], MessageTypes type) {
     return c;
 }
 
+int validate_content(const char content[])
+{
+    if (strlen(content) > MAX_CONTENT_LEN)
+        return -1;
+
+    for (size_t i = 0; i < strlen(content); i++) {
+        if (!((content[i] >= 'A' && content[i] <= 'Z') || (content[i] >= 'a' && content[i] <= 'z')
+                || (content[i] >= '0' && content[i] <= '9') || (content[i] == ',')
+                || (content[i] == '.') || (content[i] == ';') || (content[i] == '?')
+                || (content[i] == '!') || (content[i] == ' ')))
+            return -1;
+    }
+    return 0;
+}
+
+int validate_name(const char name[])
+{
+    if (strlen(name) > MAX_NAME_LEN)
+        return -1;
+
+    for (size_t i = 0; i < strlen(name); i++) {
+            if (!((name[i] >= 'A' && name[i] <= 'Z') || (name[i] >= 'a' && name[i] <= 'z')
+                    || (name[i] >= '0' && name[i] <= '9')))
+                return -1;
+        }
+        return 0;
+}
+
 Messenger *init_messenger(unsigned port, const char name[]) {
     Messenger *m = (Messenger *) malloc(sizeof(Messenger));
     if (!m) return NULL;
@@ -219,30 +247,3 @@ void delete_messenger(Messenger  *_this) {
     }
 }
 
-int validate_content(const char content[])
-{
-    if (strlen(content) > MAX_CONTENT_LEN)
-        return -1;
-
-    for (size_t i = 0; i < strlen(content); i++) {
-        if (!((content[i] >= 'A' && content[i] <= 'Z') || (content[i] >= 'a' && content[i] <= 'z')
-                || (content[i] >= '0' && content[i] <= '9') || (content[i] == ',')
-                || (content[i] == '.') || (content[i] == ';') || (content[i] == '?')
-                || (content[i] == '!') || (content[i] == ' ')))
-            return -1;
-    }
-    return 0;
-}
-
-int validate_name(const char name[])
-{
-    if (strlen(name) > MAX_NAME_LEN)
-        return -1;
-
-    for (size_t i = 0; i < strlen(name); i++) {
-            if (!((name[i] >= 'A' && name[i] <= 'Z') || (name[i] >= 'a' && name[i] <= 'z')
-                    || (name[i] >= '0' && name[i] <= '9')))
-                return -1;
-        }
-        return 0;
-}

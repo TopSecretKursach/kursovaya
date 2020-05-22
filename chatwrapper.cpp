@@ -1,10 +1,9 @@
 #include "chatwrapper.h"
-#include "chatlib.h"
 #include <exception>
 #include <QPixmap>
 #include <QBuffer>
 #include <QFile>
-
+#include "chatlib.h"
 
 ChatWrapper::ChatWrapper(const QString &name, QObject *parent) :
     QObject(parent)

@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <thread>
-#include "chatlib.h"
+#include "cchatlib.h"
 /*
  * Класс ChatWrapper является оберткой для библиотеки chatlib.h,
  * реализующей функционал чата в локальной сети

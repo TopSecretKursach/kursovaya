@@ -24,6 +24,7 @@ SOURCES += \
     validators.cpp
 
 HEADERS += \
+    cchatlib.h \
     chatwrapper.h \
     mainwindow.h \
     chatlib.h \
