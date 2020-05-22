@@ -4,7 +4,6 @@
 #include <QObject>
 #include <thread>
 #include "chatlib.h"
-
 /*
  * Класс ChatWrapper реализует функционал чата в локальной сети
  * Принимает при создании:

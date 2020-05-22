@@ -22,6 +22,7 @@ CMessenger::CMessenger(const QString &name, QObject *parent) :
 
 CMessenger::~CMessenger()
 {
+    _wrapper->send_bye();
     if (_wrapper) delete _wrapper;
 }
 
