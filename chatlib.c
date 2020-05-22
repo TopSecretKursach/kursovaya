@@ -132,6 +132,7 @@ int parse_bytes(byte *string, size_t len, MessagePacket *mp) {
     memcpy(&type, counter, sizeof(MessageTypes));
     counter += sizeof(MessageTypes);
 
+
     Content c;
     memcpy(&c, counter, sizeof(Content));
     counter += sizeof(Content);
@@ -170,6 +171,10 @@ MessagePacket *receive_message(Messenger *_this) {
 }
 
 int send_message(Messenger *_this, const char message[], MessageTypes type) {
+    if (type == CONTENT && validate_content(message) < 0) {
+        return -1;
+    }
+
     MessagePacket *mp = create_message_packet(message, _this->name, type);
     byte *send_bytes = mp_to_bytes(mp);
     free(mp);
@@ -241,9 +246,9 @@ Messenger *init_messenger(unsigned port, const char name[]) {
 
 void delete_messenger(Messenger  *_this) {
     if (_this) {
-        free(_this->send_addr);
-        free(_this->recv_addr);
-        free(_this);
+       if (_this->send_addr) free(_this->send_addr);
+       if (_this->recv_addr) free(_this->recv_addr);
+       free(_this);
     }
 }
 
