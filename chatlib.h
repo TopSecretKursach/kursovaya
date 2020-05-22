@@ -94,7 +94,7 @@ typedef struct sMessenger {
 // при передаче занятого порта возвращает NULL
 Messenger *init_messenger(unsigned port, const char name[]);
 
-// освобождает память, выделенную inti_messenger(...)
+// освобождает память, выделенную init_messenger(...)
 void delete_messenger(Messenger *_this);
 // приверяет имя на валидность, в случае невалидности имени
 // вернет -1, иначе 0
