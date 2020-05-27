@@ -3,7 +3,7 @@
 #include <QPixmap>
 #include <QBuffer>
 #include <QFile>
-#include "chatlib.h"
+#include "cchatlib.h"
 
 ChatWrapper::ChatWrapper(const QString &name, QObject *parent) :
     QObject(parent)

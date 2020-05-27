@@ -40,6 +40,9 @@ void MainWindow::on_pb_start_clicked()
         _messenger = new CMessenger(name, this);
     } catch(std::runtime_error &) {
         QMessageBox::warning(this, "Fatal error", "Initialisation failed");
+        ui->gb_start->setEnabled(true);
+        ui->gb_media->setEnabled(false);
+        ui->gb_chating->setEnabled(false);
         return;
     }
 
